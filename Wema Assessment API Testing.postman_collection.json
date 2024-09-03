@@ -1,0 +1,803 @@
+{
+	"info": {
+		"_postman_id": "e701c3a9-2efc-49b0-95e8-52e9d0d08f74",
+		"name": "Wema Assessment API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19572898",
+		"_collection_link": "https://winter-astronaut-488126.postman.co/workspace/Wema-Bank~bfe7f1bc-4646-41b4-88c7-50d66a0c09b9/collection/19572898-e701c3a9-2efc-49b0-95e8-52e9d0d08f74?action=share&source=collection_link&creator=19572898"
+	},
+	"item": [
+		{
+			"name": "Create Employer",
+			"item": [
+				{
+					"name": "Positive Scenarios",
+					"item": [
+						{
+							"name": "Create Employer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 200) {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.test(\"Status Code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"Response Content-Type is JSON\", function () {\r",
+											"        pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"Status in the Response Body is Success\", function () {\r",
+											"        pm.expect(responseJson.status).to.eql(\"success\");\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"id is in the Response Body\", function () {\r",
+											"        pm.expect(pm.response.text()).to.include(\"id\");\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"Response time is less than 1 second\", function () {\r",
+											"        pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Create Employer\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"Success\",\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"15000\",\r\n        \"age\": \"28\",\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Employer Rate Limiting",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status Code is 429\", function () {\r",
+											"    pm.response.to.have.status(429);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {\r",
+											"    url: 'https://dummy.restapiexample.com/api/v1/create',\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"    'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify(\r",
+											"            {\r",
+											"                \"status\": \"Success\",\r",
+											"                \"data\": {\r",
+											"                    \"name\": \"Test User\",\r",
+											"                    \"salary\": \"15000\",\r",
+											"                    \"age\": \"28\",\r",
+											"                    \"id\": 1\r",
+											"                }\r",
+											"            }\r",
+											"        )\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequest)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"Success\",\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"15000\",\r\n        \"age\": \"28\",\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative Scenarios",
+					"item": [
+						{
+							"name": "Create Employer without Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\");\r",
+											"\r",
+											"if(pm.response.code === 400 || pm.response.code === 200) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Create Employer without Status\");\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    //\"status\": \"Success\",\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"15000\",\r\n        \"age\": \"28\",\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Employer without Data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 400 || pm.response.code === 200) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Create Employer without Data\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"Success\"/*,\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"15000\",\r\n        \"age\": \"28\",\r\n        \"id\": 1\r\n    }*/\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Employer with Invalid Salary",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 400 || pm.response.code === 200) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Create Employer with Invalid Salary\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"Success\",\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"Test\",\r\n        \"age\": \"28\",\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Employer with Invalid Age",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 400 || pm.response.code === 200) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Create Employer with Invalid Age\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"Success\",\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"15000\",\r\n        \"age\": \"Test\",\r\n        \"id\": 1\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Employer with Invalid ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 400 || pm.response.code === 200) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Create Employer with Invalid ID\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"Success\",\r\n    \"data\": {\r\n        \"name\": \"Test User\",\r\n        \"salary\": \"15000\",\r\n        \"age\": \"28\",\r\n        \"id\": \"Test\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get All Employees",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+									"\r",
+									"if(pm.response.code === 200) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.test(\"Status Code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response time is less than 1 second\", function () {\r",
+									"        pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response Content-Type is JSON\", function () {\r",
+									"        pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Status in the Response Body is Success\", function () {\r",
+									"        pm.expect(responseJson.status).to.eql(\"success\");\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"id is in the Response Body\", function () {\r",
+									"        pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    });\r",
+									"} else {\r",
+									"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+									"    pm.execution.setNextRequest(\"Get All Employees\")\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/employees",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Employees Rate Limiting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 429\", function () {\r",
+									"    pm.response.to.have.status(429);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const postRequest = {\r",
+									"    url: 'http://dummy.restapiexample.com/api/v1/employees',\r",
+									"    method: 'GET',\r",
+									"    header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    },\r",
+									"};\r",
+									"\r",
+									"pm.sendRequest(postRequest)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/employees",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Employee",
+			"item": [
+				{
+					"name": "Positive Scenarios",
+					"item": [
+						{
+							"name": "Get Employee",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 200 || pm.response.code === 404) {\r",
+											"    const responseJson = pm.response.json();\r",
+											"\r",
+											"    pm.test(\"Status Code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"Response time is less than 1 second\", function () {\r",
+											"        pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"Response Content-Type is JSON\", function () {\r",
+											"        pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"id in the Response Body is 5\", function () {\r",
+											"        pm.expect(responseJson.id).to.eql(5);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Get Employee\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://dummy.restapiexample.com/api/v1/employees/:id",
+									"protocol": "http",
+									"host": [
+										"dummy",
+										"restapiexample",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"employees",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Employee Rate Limiting",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status Code is 429\", function () {\r",
+											"    pm.response.to.have.status(429);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const postRequest = {\r",
+											"    url: 'http://dummy.restapiexample.com/api/v1/employees/5',\r",
+											"    method: 'GET',\r",
+											"    header: {\r",
+											"    'Content-Type': 'application/json',\r",
+											"    },\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequest)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://dummy.restapiexample.com/api/v1/employees/:id",
+									"protocol": "http",
+									"host": [
+										"dummy",
+										"restapiexample",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"employees",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative Scenarios",
+					"item": [
+						{
+							"name": "Get Employee with Non-Existent ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 404) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 404\", function () {\r",
+											"        pm.response.to.have.status(404);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Get Employee with Non-Existent ID\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://dummy.restapiexample.com/api/v1/employees/:id",
+									"protocol": "http",
+									"host": [
+										"dummy",
+										"restapiexample",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"employees",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "999999"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Employee with Invalid ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const retryTime = pm.response.headers.get(\"retry-after\")\r",
+											"\r",
+											"if(pm.response.code === 400 || pm.response.code === 404) {\r",
+											"\r",
+											"    pm.test(\"Status Code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"} else {\r",
+											"    setTimeout(() => {}, parseInt(retryTime) * 1000);\r",
+											"    pm.execution.setNextRequest(\"Get Employee with Non-Existent ID\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://dummy.restapiexample.com/api/v1/employees/:id",
+									"protocol": "http",
+									"host": [
+										"dummy",
+										"restapiexample",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"employees",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "Test"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "https://dummy.restapiexample.com",
+			"type": "string"
+		}
+	]
+}
