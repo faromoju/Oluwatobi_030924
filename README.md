@@ -7,7 +7,7 @@
 
 # MOBILE TESTS
 ### The Mobile Automation Scripts are contained in the test folder
-### The WebdriverIO framework built on Javascript with Appium serving as the driver is implemented to run the mobile tests
+### The WebdriverIO framework built on Javascript with Appium serving as the driver is utilized to design and implement the mobile tests
 
 ##### The Page Object Model was utilized in writing these scripts so, the main executable files are in the specs folder while the pages are in the screens folder.
 ##### To run the Mobile Tests, the npx wdio command should be run in the Project's path.
