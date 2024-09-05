@@ -12,4 +12,4 @@
 ##### The Page Object Model was utilized in writing these scripts so, the main executable files are in the specs folder while the pages are in the screens folder.
 ##### To run the Mobile Tests, the npx wdio command should be run in the Project's path.
 ##### Scripts have been included in the package.json file to run individual spec files.
-##### The node_modules folder containing all the project's dependencies is excluded from this repository. This can be downloaded when the repository is imported.
+##### The node_modules folder containing all the project's dependencies is excluded from this repository. This can be installed when the repository is imported.
