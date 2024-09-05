@@ -8,7 +8,7 @@
 # MOBILE TESTS
 ### The Mobile Automation Scripts are contained in the test folder
 ### The WebdriverIO framework built on Javascript with Appium serving as the driver is utilized to design and implement the mobile tests
-### Appium Server 2.0 is required to be installed to run the test scripts
+### Appium Server 2.0 should be installed to run the test scripts
 ### UiAutomator2 driver should be installed to run the test scripts
 ### WebDriverIO should be installed to run the test scripts
 
